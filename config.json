@@ -1,10 +1,10 @@
 {
-	"token": "Put-Token-Here",
-	"developerGuild": "Put-DevGuild-ID-Here",
-	"developer": "Put-Your-Discord-ID-Here",
-	"invite": "Put-Invite-Link-Here",
-	"support": "https://discord.gg/novaworld",
+	"token": "TON_TOKEN_ICI",
+	"developerGuild": "ID_DE_TON_SERVEUR",
+	"developer": "TON_ID_DISCORD",
+	"invite": "",
+	"support": "https://discord.gg/G2uCgaq4as",
 	"groq": {
-		"key": "Put-Groq-Key-Here"
+		"key": "TA_CLE_GROQ_ICI"
 	}
 }
