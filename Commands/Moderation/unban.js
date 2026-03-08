@@ -3,17 +3,17 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("unban")
-    .setDescription("💖 Débannir un utilisateur")
+    .setDescription("💻 Réautoriser l'accès au réseau (unban) d'un utilisateur")
     .addStringOption((option) =>
       option
         .setName("userid")
-        .setDescription("L'ID Discord de l'utilisateur à débannir")
+        .setDescription("L'ID Discord de l'utilisateur à réintégrer")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("raison")
-        .setDescription("Raison du unban")
+        .setDescription("Raison du rétablissement d'accès")
         .setRequired(false)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
@@ -28,7 +28,7 @@ module.exports = {
 
       if (!banInfo) {
         return interaction.reply({
-          content: `Hmm, je trouve pas de ban pour cet ID ! 😅💎 Vérifie bien l'ID Discord.`,
+          content: `Erreur de base de données : Je ne trouve aucun ban pour l'ID **${userId}** ! 😅💻`,
           ephemeral: true,
         });
       }
@@ -36,15 +36,15 @@ module.exports = {
       await interaction.guild.members.unban(userId, raison);
 
       const embed = {
-        color: 0x58d68d,
-        title: "💖 Crystal Gems — Débannissement !",
-        description: `YAY !! **${banInfo.user.tag}** peut revenir dans le serveur !! 🎉✨ Tout le monde mérite une seconde chance !!`,
+        color: 0x58d68d, // Vert pour le succès de la procédure
+        title: "💻 Supercalculateur — Accès Rétabli",
+        description: `Transfert réussi !! **${banInfo.user.tag}** est de nouveau autorisé sur le réseau !! 🎉⚡`,
         fields: [
           { name: "👤 Utilisateur", value: `${banInfo.user.tag}`, inline: true },
-          { name: "🛡️ Modérateur", value: `<@${interaction.user.id}>`, inline: true },
-          { name: "📝 Raison", value: raison },
+          { name: "🛡️ Opérateur", value: `<@${interaction.user.id}>`, inline: true },
+          { name: "📝 Note technique", value: raison },
         ],
-        footer: { text: "Steven Universe Bot 💎✨" },
+        footer: { text: "Interface Jérémie Belpois — Code Lyoko" },
         timestamp: new Date().toISOString(),
       };
 
@@ -52,7 +52,7 @@ module.exports = {
     } catch (error) {
       console.error(error);
       await interaction.reply({
-        content: "Oups ! Je trouve pas ce ban, ou ma gemme a glitché 😅💎 Vérifie l'ID !",
+        content: "Erreur critique ! 😅💻 Je ne trouve pas ce ban ou le Supercalculateur a un bug. Vérifie bien l'ID !",
         ephemeral: true,
       });
     }
