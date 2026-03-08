@@ -3,23 +3,23 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("mute")
-    .setDescription("💎 Mettre en sourdine un membre du serveur")
+    .setDescription("💻 Mettre en quarantaine (mute) un membre sur le réseau")
     .addUserOption((option) =>
       option
         .setName("membre")
-        .setDescription("Le membre à muter")
+        .setDescription("Le membre à mettre en sourdine")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("duree")
-        .setDescription("Durée du mute (ex: 10m, 1h, 1d)")
+        .setDescription("Durée (ex: 10m, 1h, 1d)")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("raison")
-        .setDescription("Raison du mute")
+        .setDescription("Raison de la mise en quarantaine")
         .setRequired(false)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
@@ -33,28 +33,28 @@ module.exports = {
     // Vérifications
     if (!membre) {
       return interaction.reply({
-        content: "Hé, ce membre n'existe pas ! 😅💎",
+        content: "Erreur de liaison : Ce membre est introuvable dans la base de données ! 💻⚡",
         ephemeral: true,
       });
     }
 
     if (membre.id === interaction.user.id) {
       return interaction.reply({
-        content: "ATTENDS !! 😱 Tu peux pas te muter toi-même !! C'est pas comme ça que les Crystal Gems font les choses ! 💖",
+        content: "Négatif !! 😱 Tu ne peux pas couper ton propre micro sur le Supercalculateur ! On a besoin de tes rapports ! 💻",
         ephemeral: true,
       });
     }
 
     if (membre.id === client.user.id) {
       return interaction.reply({
-        content: "Hé ! Tu essaies de me muter MOI ?! 😤💎 C'est pas cool ça !",
+        content: "Tu essaies de me réduire au silence ? Si je ne peux plus parler, qui va guider Aelita sur Lyoko ? 😤💻",
         ephemeral: true,
       });
     }
 
     if (!membre.moderatable) {
       return interaction.reply({
-        content: "Oups… je peux pas muter cette personne, elle a trop de pouvoir ! 😅✨ Demande à un admin !",
+        content: "Oups… ce membre possède un protocole de cryptage trop élevé, je ne peux pas le muter ! 😅⚡",
         ephemeral: true,
       });
     }
@@ -63,14 +63,14 @@ module.exports = {
     const dureeMs = parseDuration(dureeStr);
     if (!dureeMs) {
       return interaction.reply({
-        content: "Hmmm je comprends pas cette durée 😅💎 Utilise: `10m`, `1h`, `1d`, `7d` (max 28 jours !)",
+        content: "Paramètre temporel invalide 😅💻 Utilise : `10m`, `1h`, `1d` (maximum 28 jours !)",
         ephemeral: true,
       });
     }
 
     if (dureeMs > 28 * 24 * 60 * 60 * 1000) {
       return interaction.reply({
-        content: "Woah woah woah !! 😱 Discord autorise pas plus de 28 jours de mute ! 💎",
+        content: "Attention !! 😱 Le Supercalculateur ne peut pas gérer une quarantaine de plus de 28 jours ! 💻",
         ephemeral: true,
       });
     }
@@ -79,35 +79,10 @@ module.exports = {
       await membre.timeout(dureeMs, raison);
 
       const embed = {
-        color: 0xf4d03f,
-        title: "💎 Crystal Gems — Mise en sourdine",
-        description: `Hé **${membre.user.tag}**… j'espère que tu vas réfléchir pendant ce temps 💛`,
+        color: 0xffcc00, // Jaune interface Jérémie
+        title: "💻 Supercalculateur — Mise en quarantaine",
+        description: `L'accès vocal de **${membre.user.tag}** a été suspendu pour maintenance. 🛠️`,
         fields: [
-          { name: "👤 Membre", value: `<@${membre.id}>`, inline: true },
+          { name: "👤 Utilisateur", value: `<@${membre.id}>`, inline: true },
           { name: "⏱️ Durée", value: dureeStr, inline: true },
-          { name: "🛡️ Modérateur", value: `<@${interaction.user.id}>`, inline: true },
-          { name: "📝 Raison", value: raison },
-        ],
-        footer: { text: "Steven Universe Bot 💎✨" },
-        timestamp: new Date().toISOString(),
-      };
-
-      await interaction.reply({ embeds: [embed] });
-    } catch (error) {
-      console.error(error);
-      await interaction.reply({
-        content: "Oups ! Ma gemme a glitché 😅💎 J'ai pas pu muter ce membre…",
-        ephemeral: true,
-      });
-    }
-  },
-};
-
-function parseDuration(str) {
-  const match = str.match(/^(\d+)(s|m|h|d)$/);
-  if (!match) return null;
-  const value = parseInt(match[1]);
-  const unit = match[2];
-  const multipliers = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
-  return value * multipliers[unit];
-}
+          { name: "🛡️ Opérateur", value: `<@${interaction.user.id}>`, inline: true },
