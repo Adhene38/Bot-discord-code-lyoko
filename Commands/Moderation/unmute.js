@@ -3,17 +3,17 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("unmute")
-    .setDescription("💖 Retirer la sourdine d'un membre")
+    .setDescription("💻 Lever la quarantaine (unmute) d'un membre")
     .addUserOption((option) =>
       option
         .setName("membre")
-        .setDescription("Le membre à démuter")
+        .setDescription("Le membre à réactiver")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("raison")
-        .setDescription("Raison du unmute")
+        .setDescription("Raison de la levée de quarantaine")
         .setRequired(false)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
@@ -25,14 +25,14 @@ module.exports = {
 
     if (!membre) {
       return interaction.reply({
-        content: "Hé, ce membre n'existe pas ! 😅💎",
+        content: "Erreur de scanner : Sujet introuvable dans la base de données ! 😅💻",
         ephemeral: true,
       });
     }
 
     if (!membre.isCommunicationDisabled()) {
       return interaction.reply({
-        content: `**${membre.user.tag}** n'est pas muté ! 😄✨`,
+        content: `Le protocole de communication de **${membre.user.tag}** est déjà opérationnel ! 💻✅`,
         ephemeral: true,
       });
     }
@@ -41,15 +41,15 @@ module.exports = {
       await membre.timeout(null, raison);
 
       const embed = {
-        color: 0x58d68d,
-        title: "💖 Crystal Gems — Sourdine retirée !",
-        description: `YAY !! **${membre.user.tag}** peut parler à nouveau !! 🎉✨ Bienvenue de retour dans la communauté !!`,
+        color: 0x58d68d, // Vert pour le rétablissement du système
+        title: "💻 Supercalculateur — Quarantaine Levée",
+        description: `Transfert réussi !! **${membre.user.tag}** peut à nouveau communiquer sur le réseau !! 🎉⚡`,
         fields: [
           { name: "👤 Membre", value: `<@${membre.id}>`, inline: true },
-          { name: "🛡️ Modérateur", value: `<@${interaction.user.id}>`, inline: true },
-          { name: "📝 Raison", value: raison },
+          { name: "🛡️ Opérateur", value: `<@${interaction.user.id}>`, inline: true },
+          { name: "📝 Rapport technique", value: raison },
         ],
-        footer: { text: "Steven Universe Bot 💎✨" },
+        footer: { text: "Interface Jérémie Belpois — Code Lyoko" },
         timestamp: new Date().toISOString(),
       };
 
@@ -57,9 +57,4 @@ module.exports = {
     } catch (error) {
       console.error(error);
       await interaction.reply({
-        content: "Oups ! Ma gemme a glitché 😅💎 J'ai pas pu démuter ce membre…",
-        ephemeral: true,
-      });
-    }
-  },
-};
+        content: "Erreur critique ! 😅💻 Le Supercalculateur a glitch
