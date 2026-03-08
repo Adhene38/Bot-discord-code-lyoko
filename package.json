@@ -1,13 +1,14 @@
+
 {
-  "name": "steven-universe-bot",
+  "name": "jeremie-belpois-bot",
   "version": "1.0.0",
-  "description": "Bot Discord Steven Universe powered by Groq AI",
+  "description": "Interface du Supercalculateur - Jérémie Belpois (Lyoko) powered by Groq AI",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "author": "Nekros#9999",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^14.7.1",
     "groq-sdk": "^0.3.0"
