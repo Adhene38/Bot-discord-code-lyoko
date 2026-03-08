@@ -3,23 +3,23 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ban")
-    .setDescription("💎 Bannir un membre du serveur")
+    .setDescription("💻 Dévirtualiser (bannir) un membre du réseau")
     .addUserOption((option) =>
       option
         .setName("membre")
-        .setDescription("Le membre à bannir")
+        .setDescription("Le membre à dévirtualiser")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("raison")
-        .setDescription("Raison du ban")
+        .setDescription("Raison de la dévirtualisation")
         .setRequired(false)
     )
     .addIntegerOption((option) =>
       option
         .setName("supprimer_messages")
-        .setDescription("Supprimer les messages des X derniers jours (0-7)")
+        .setDescription("Supprimer les archives des X derniers jours (0-7)")
         .setMinValue(0)
         .setMaxValue(7)
         .setRequired(false)
@@ -35,28 +35,28 @@ module.exports = {
 
     if (!membre) {
       return interaction.reply({
-        content: "Hé, ce membre n'existe pas ! 😅💎",
+        content: "Erreur de scanner : ce membre n'est pas détecté dans le secteur ! 💻⚡",
         ephemeral: true,
       });
     }
 
     if (membre.id === interaction.user.id) {
       return interaction.reply({
-        content: "ATTENDS !! 😱 Tu peux pas te bannir toi-même !! Les Crystal Gems protègent tout le monde, même toi ! 💖",
+        content: "Procédure impossible !! 😱 Tu ne peux pas te dévirtualiser toi-même ! On a besoin de toi sur Lyoko ! ⚡",
         ephemeral: true,
       });
     }
 
     if (membre.id === client.user.id) {
       return interaction.reply({
-        content: "Tu… tu veux me bannir MOI ?! 😭💎 Après tout ce qu'on a vécu ensemble !!",
+        content: "Tu veux éteindre le Supercalculateur ?! 😭 Sans moi, plus personne ne pourra contrer XANA !!",
         ephemeral: true,
       });
     }
 
     if (!membre.bannable) {
       return interaction.reply({
-        content: "Oups… je peux pas bannir cette personne, elle a trop de pouvoir ! 😅✨ Demande à un admin !",
+        content: "Accès refusé… ce membre possède un pare-feu trop puissant ! 😅💻 Demande à un administrateur du système !",
         ephemeral: true,
       });
     }
@@ -65,36 +65,10 @@ module.exports = {
       // Envoyer un DM avant le ban
       try {
         await membre.send(
-          `💎 Tu as été banni du serveur.\n📝 Raison : ${raison}\n\nJ'espère qu'on se reverra un jour, Gem… 💛`
+          `⚡ Ton accès au Supercalculateur a été révoqué.\n📝 Raison : ${raison}\n\nFin du transfert, liaison rompue… 💻`
         );
       } catch {}
 
       await membre.ban({
         reason: raison,
-        deleteMessageDays: deleteMessageDays,
-      });
-
-      const embed = {
-        color: 0xe74c3c,
-        title: "💎 Crystal Gems — Bannissement",
-        description: `**${membre.user.tag}** a été banni du serveur… C'était nécessaire pour protéger la communauté 💛`,
-        fields: [
-          { name: "👤 Membre", value: `${membre.user.tag}`, inline: true },
-          { name: "🛡️ Modérateur", value: `<@${interaction.user.id}>`, inline: true },
-          { name: "🗑️ Messages supprimés", value: `${deleteMessageDays} jour(s)`, inline: true },
-          { name: "📝 Raison", value: raison },
-        ],
-        footer: { text: "Steven Universe Bot 💎✨" },
-        timestamp: new Date().toISOString(),
-      };
-
-      await interaction.reply({ embeds: [embed] });
-    } catch (error) {
-      console.error(error);
-      await interaction.reply({
-        content: "Oups ! Ma gemme a glitché 😅💎 J'ai pas pu bannir ce membre…",
-        ephemeral: true,
-      });
-    }
-  },
-};
+        deleteMessageDays: deleteMessage
